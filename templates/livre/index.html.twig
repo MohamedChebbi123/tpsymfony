@@ -1,77 +1,121 @@
 {# templates/livre/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Livre - Liste{% endblock %}
+{% block title %}Liste des Livres{% endblock %}
 
 {% block stylesheets %}
     <style>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        .add-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .add-button:hover {
+            background-color: #218838;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f4f4f4;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         thead {
-            border-bottom: 2px solid #ccc;
+            background-color: #343a40;
+            color: #fff;
         }
-        h1 {
-            margin-bottom: 15px;
+        th, td {
+            padding: 15px;
+            text-align: left;
         }
-        a {
-            display: inline-block;
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
+        th {
+            font-weight: 600;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .action-links a {
+            margin-right: 10px;
+            color: #007bff;
             text-decoration: none;
-            border-radius: 5px;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
-        a:hover {
-            background-color: #0056b3;
+        .action-links a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .no-books-message {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            color: #555;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <h1>Liste des livres</h1>
-    <a href="{{ path('app_livre_ajouter') }}">Ajouter un livre</a>
-    {% if livres is not empty %}
-        <table border="1" cellpadding="10" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Titre</th>
-                    <th>Auteur</th>
-                    <th>Date de Publication</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for livre in livres %}
+    <div class="container">
+        <div class="header">
+            <h1>Liste des Livres</h1>
+            <a href="{{ path('app_livre_ajouter') }}" class="add-button">Ajouter un Livre</a>
+        </div>
+        
+        {% if livres is not empty %}
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ livre.Titre }}</td>
-                        <td>{{ livre.Auteur }}</td>
-                        {# <td>{{ livre.Description }}</td> #}
-                        <td>{{ livre.getDateDePublication()|date('Y-m-d') }}</td>
-                        <td>
-                            <a href="{{path('app_livre_details',{id: livre.id})}}">Details</a>
-                            <a href="{{path('app_livre_supprimer',{id: livre.id})}}">Supprime</a>
-                        </td>
+                        <th>Titre</th>
+                        <th>Auteur</th>
+                        <th>Date de Publication</th>
+                        <th>Actions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Aucun livre n'est disponible pour l'instant.</p>
-    {% endif %}
+                </thead>
+                <tbody>
+                    {% for livre in livres %}
+                        <tr>
+                            <td>{{ livre.Titre }}</td>
+                            <td>{{ livre.Auteur }}</td>
+                            <td>{{ livre.getDateDePublication()|date('Y-m-d') }}</td>
+                            <td class="action-links">
+                                <a href="{{ path('app_livre_details', { id: livre.id }) }}">Détails</a>
+                                <a href="{{ path('app_livre_supprimer', { id: livre.id }) }}">Supprimer</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="no-books-message">
+                Aucun livre n'est disponible pour l'instant.
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
